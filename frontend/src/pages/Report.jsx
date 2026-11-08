@@ -46,7 +46,7 @@ export default function Report() {
             [['Patient', a.full_name], ['Age / Gender', `${a.age !== null ? `${a.age} Y` : '—'} / ${a.gender}`], ['Referred by', a.referred_by || '—'], ['Phone', a.phone || '—']],
             [['Patient ID', a.patient_code], ['Report No', a.assignment_no], ['Sample date', fmtDate(a.assignment_date)], ['Reported on', a.completed_at ? fmtDate(a.completed_at) : '—']],
           ].map((col, i) => (
-            <dl key={i} className="grid grid-cols-[6.5rem_0.75rem_1fr] gap-y-1">
+            <dl key={i} className={`grid grid-cols-[6.5rem_0.75rem_auto] gap-y-1 ${i === 1 ? 'sm:justify-self-end print:justify-self-end' : ''}`}>
               {col.map(([label, value]) => (
                 <div key={label} className="contents">
                   <dt className="font-semibold">{label}</dt>
@@ -71,7 +71,7 @@ export default function Report() {
                 <tr className="border-b border-ink-400">
                   <th className="px-2 py-1.5 text-left font-semibold">Component</th>
                   <th className="px-2 py-1.5 text-center font-semibold">Result</th>
-                  <th className="px-2 py-1.5 text-left font-semibold">Reference range</th>
+                  <th className="py-1.5 pl-2 pr-0 text-right font-semibold">Reference range</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,7 +79,7 @@ export default function Report() {
                   <tr key={i} className="border-b border-ink-100 align-top">
                     <td className="break-words px-2 py-1.5">{c.component_name}</td>
                     <td className="break-words px-2 py-1.5 text-center font-bold">{c.result_value}</td>
-                    <td className="break-words px-2 py-1.5">{range(c)}</td>
+                    <td className="break-words py-1.5 pl-2 pr-0 text-right">{range(c)}</td>
                   </tr>
                 ))}
               </tbody>
