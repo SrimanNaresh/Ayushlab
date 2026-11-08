@@ -39,34 +39,47 @@ export default function Report() {
           <p className="mt-1 text-sm font-bold uppercase tracking-widest">Laboratory Report</p>
         </div>
 
-        <section className="grid grid-cols-2 gap-x-6 gap-y-1 border-b border-ink-300 py-3 text-[12.5px]">
-          <p><b>Patient:</b> {a.full_name}</p>
-          <p><b>Patient ID:</b> {a.patient_code}</p>
-          <p><b>Age / Gender:</b> {a.age !== null ? `${a.age} Y` : '—'} / {a.gender}</p>
-          <p><b>Report No:</b> {a.assignment_no}</p>
-          <p><b>Referred by:</b> {a.referred_by || '—'}</p>
-          <p><b>Sample date:</b> {fmtDate(a.assignment_date)}</p>
-          <p><b>Phone:</b> {a.phone || '—'}</p>
-          <p><b>Reported on:</b> {a.completed_at ? fmtDate(a.completed_at) : ''}</p>
+        {/* Patient details: each half is a label | : | value grid, so the
+            colons and values line up in a straight column. */}
+        <section className="grid grid-cols-1 gap-x-8 gap-y-1 border-b border-ink-300 py-3 text-[12.5px] sm:grid-cols-2 print:grid-cols-2">
+          {[
+            [['Patient', a.full_name], ['Age / Gender', `${a.age !== null ? `${a.age} Y` : '—'} / ${a.gender}`], ['Referred by', a.referred_by || '—'], ['Phone', a.phone || '—']],
+            [['Patient ID', a.patient_code], ['Report No', a.assignment_no], ['Sample date', fmtDate(a.assignment_date)], ['Reported on', a.completed_at ? fmtDate(a.completed_at) : '—']],
+          ].map((col, i) => (
+            <dl key={i} className="grid grid-cols-[6.5rem_0.75rem_1fr] gap-y-1">
+              {col.map(([label, value]) => (
+                <div key={label} className="contents">
+                  <dt className="font-semibold">{label}</dt>
+                  <dd>:</dd>
+                  <dd className="min-w-0 break-words">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          ))}
         </section>
 
         {tests.map((t) => (
           <section key={t.assignment_test_id} className="mt-4 break-inside-avoid">
-            <h2 className="mb-1 bg-brand-50 px-2 py-1 text-[13px] font-bold uppercase text-brand-900 print:bg-transparent print:px-0">{t.test_name}</h2>
-            <table className="w-full border-collapse text-[12.5px]">
+            <h2 className="mb-1 bg-brand-50 px-2 py-1 text-[13px] font-bold uppercase text-brand-900">{t.test_name}</h2>
+            <table className="w-full table-fixed border-collapse text-[12.5px]">
+              <colgroup>
+                <col className="w-[45%]" />
+                <col className="w-[20%]" />
+                <col className="w-[35%]" />
+              </colgroup>
               <thead>
-                <tr className="border-b border-ink-400 text-left">
-                  <th className="py-1 pr-2 font-semibold">Component</th>
-                  <th className="py-1 pr-2 font-semibold">Result</th>
-                  <th className="py-1 pr-2 font-semibold">Reference range</th>
+                <tr className="border-b border-ink-400">
+                  <th className="px-2 py-1.5 text-left font-semibold">Component</th>
+                  <th className="px-2 py-1.5 text-center font-semibold">Result</th>
+                  <th className="px-2 py-1.5 text-left font-semibold">Reference range</th>
                 </tr>
               </thead>
               <tbody>
                 {t.components.map((c, i) => (
-                  <tr key={i} className="border-b border-ink-100">
-                    <td className="py-1 pr-2">{c.component_name}</td>
-                    <td className="py-1 pr-2 font-bold">{c.result_value}</td>
-                    <td className="py-1 pr-2">{range(c)}</td>
+                  <tr key={i} className="border-b border-ink-100 align-top">
+                    <td className="break-words px-2 py-1.5">{c.component_name}</td>
+                    <td className="break-words px-2 py-1.5 text-center font-bold">{c.result_value}</td>
+                    <td className="break-words px-2 py-1.5">{range(c)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -74,9 +87,9 @@ export default function Report() {
           </section>
         ))}
 
-        <div className="mt-10 flex items-end justify-between border-t border-ink-300 pt-3 text-[11px] text-ink-700">
+        <div className="mt-12 grid grid-cols-2 items-end gap-4 border-t border-ink-300 pt-3 text-[11px] text-ink-700">
           <p>{lab.report_footer}</p>
-          <p className="text-right"><span className="mb-6 block" />Authorised signatory</p>
+          <p className="text-right">Authorised signatory</p>
         </div>
       </article>
     </div>
