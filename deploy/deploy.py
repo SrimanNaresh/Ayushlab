@@ -21,6 +21,15 @@ import time
 
 import paramiko
 
+# The server's build output contains characters such as a check mark. A Windows
+# console uses cp1252 by default and would crash printing them, so print UTF-8
+# and swap anything the console still can't show for a placeholder.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        pass
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APP = 'ayushlab'
 REMOTE_DIR = f'/opt/projects/{APP}'
